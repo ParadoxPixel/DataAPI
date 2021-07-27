@@ -1,6 +1,8 @@
 package nl.iobyte.dataapi.initializer;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 public class DataInitializer {
 
@@ -19,6 +21,30 @@ public class DataInitializer {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Get new instance and set value of fields
+     * @param clazz Class<T>
+     * @param fields Map<String, Object>
+     * @param <T> T
+     * @return T
+     */
+    public static <T> T newInstance(Class<T> clazz, Map<String, Object> fields) {
+        T instance = newInstance(clazz);
+        if(instance == null)
+            return null;
+
+        Field field;
+        for(Map.Entry<String, Object> entry : fields.entrySet()) {
+            try {
+                field = clazz.getField(entry.getKey());
+                field.setAccessible(true);
+                field.set(instance, entry.getValue());
+            } catch (Exception ignored) { }
+        }
+
+        return instance;
     }
 
     /**
