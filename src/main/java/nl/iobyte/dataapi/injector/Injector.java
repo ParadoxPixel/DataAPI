@@ -1,11 +1,13 @@
 package nl.iobyte.dataapi.injector;
 
+import nl.iobyte.dataapi.initializer.DataInitializer;
 import nl.iobyte.dataapi.injector.annotations.Inject;
 import nl.iobyte.dataapi.injector.interfaces.InterfaceSupplier;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class Injector {
@@ -55,6 +57,31 @@ public class Injector {
     }
 
     /**
+     * Get value from class
+     * @param clazz Class<T>
+     * @param <T> T
+     * @return T
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(Class<T> clazz) {
+        AtomicReference<T> instance = new AtomicReference<>();
+        getOptional(clazz).ifPresentOrElse(v -> instance.set(v.get()), () -> {
+            for(Map.Entry<Class<?>, InterfaceSupplier<?>> entry : interfaces.entrySet()) {
+                if(!entry.getKey().isAssignableFrom(clazz))
+                    continue;
+
+                Object v = entry.getValue().get(clazz);
+                if(v == null)
+                    continue;
+
+                instance.set((T) v);
+            }
+        });
+
+        return instance.get();
+    }
+
+    /**
      * Check if class is present in injector
      * @param clazz Class<?>
      * @return Boolean
@@ -83,26 +110,14 @@ public class Injector {
             if(!field.isAnnotationPresent(Inject.class))
                 continue;
 
-            getOptional(field.getType()).ifPresentOrElse(v -> {
-                try {
-                    field.setAccessible(true);
-                    field.set(obj, v.get());
-                } catch (Exception ignored) { }
-            }, () -> {
-                for(Map.Entry<Class<?>, InterfaceSupplier<?>> entry : interfaces.entrySet()) {
-                    if(!entry.getKey().isAssignableFrom(field.getType()))
-                        continue;
+            Object v = getValue(field.getType());
+            if(v == null)
+                continue;
 
-                    Object v = entry.getValue().get(field.getType());
-                    if(v == null)
-                        continue;
-
-                    try {
-                        field.setAccessible(true);
-                        field.set(obj, v);
-                    } catch (Exception ignored) { }
-                }
-            });
+            try {
+                field.setAccessible(true);
+                field.set(obj, v);
+            } catch (Exception ignored) { }
         }
     }
 
@@ -113,12 +128,9 @@ public class Injector {
      * @return T
      */
     public <T> T inject(Class<T> clazz) {
-        T instance;
-        try {
-            instance = clazz.getConstructor().newInstance();
-        } catch (Exception e) {
+        T instance = DataInitializer.getInstance(clazz);
+        if(instance == null)
             return null;
-        }
 
         inject(instance);
         return instance;

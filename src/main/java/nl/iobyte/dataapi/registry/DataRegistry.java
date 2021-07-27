@@ -1,5 +1,7 @@
 package nl.iobyte.dataapi.registry;
 
+import nl.iobyte.dataapi.initializer.DataInitializer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +32,9 @@ public class DataRegistry<R> {
         if(entries.containsKey(clazz))
             return (T) entries.get(clazz);
 
-        T instance;
-        try {
-            instance = clazz.getConstructor().newInstance();
-        } catch (Exception e) {
+        T instance = DataInitializer.getInstance(clazz);
+        if(instance == null)
             return null;
-        }
 
         entries.put(clazz, instance);
         for(Consumer<R> consumer : consumers)
