@@ -1,4 +1,4 @@
-package nl.iobyte.dataapi.dependency.annotations;
+package nl.iobyte.dataapi.injector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

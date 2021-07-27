@@ -1,4 +1,4 @@
-package nl.iobyte.dataapi.dependency.interfaces;
+package nl.iobyte.dataapi.injector.interfaces;
 
 public interface InterfaceSupplier<T> {
 

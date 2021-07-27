@@ -1,16 +1,16 @@
-package nl.iobyte.dataapi.dependency;
+package nl.iobyte.dataapi.injector;
 
-import nl.iobyte.dataapi.dependency.annotations.Inject;
-import nl.iobyte.dataapi.dependency.interfaces.InterfaceSupplier;
+import nl.iobyte.dataapi.injector.annotations.Inject;
+import nl.iobyte.dataapi.injector.interfaces.InterfaceSupplier;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class DependencyInjector {
+public class Injector {
 
-    private final Map<Class<?>, Supplier<?>> dependencies = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Supplier<?>> entries = new ConcurrentHashMap<>();
     private final Map<Class<?>, InterfaceSupplier<?>> interfaces = new ConcurrentHashMap<>();
 
     /**
@@ -20,7 +20,7 @@ public class DependencyInjector {
      * @param <T> T
      */
     public <T> void register(Class<T> clazz, Supplier<T> supplier) {
-        dependencies.put(clazz, supplier);
+        entries.put(clazz, supplier);
     }
 
     /**
@@ -41,7 +41,7 @@ public class DependencyInjector {
      */
     @SuppressWarnings("unchecked")
     public <T> Supplier<T> get(Class<T> clazz) {
-        return (Supplier<T>) dependencies.get(clazz);
+        return (Supplier<T>) entries.get(clazz);
     }
 
     /**
@@ -55,11 +55,23 @@ public class DependencyInjector {
     }
 
     /**
+     * Check if class is present in injector
+     * @param clazz Class<?>
+     * @return Boolean
+     */
+    public boolean has(Class<?> clazz) {
+        if(entries.containsKey(clazz))
+            return true;
+
+        return interfaces.containsKey(clazz);
+    }
+
+    /**
      * Unregister dependency
      * @param clazz Class<?>
      */
     public void unregister(Class<?> clazz) {
-        dependencies.remove(clazz);
+        entries.remove(clazz);
     }
 
     /**
