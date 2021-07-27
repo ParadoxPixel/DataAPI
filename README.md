@@ -85,3 +85,50 @@ EventDriver driver = new EventDriver();
 //Fire event
 driver.fire(new MyEvent());
 ```
+
+### DataService
+Create an entry class
+```java
+public class MyEntry extends Data<T> {
+    
+    public MyEntry(T id) {
+        super(id);
+    }
+    
+}
+```
+Create service class
+```java
+public class MyService extends DataService<T, MyEntry> {
+    
+}
+```
+You can now use the service
+```java
+MyService service = new MyService();
+
+//Add an MyEntry instance
+service.add(entry);
+
+//Check if has id of type T
+service.has(id);
+
+//Get entry of type T
+MyEntry entry = service.get(id);
+
+//Or get option of entry
+Optional<MyEntry> option = service.getOptional(id);
+
+//Remove entry with id and return value
+MyEntry value = service.remove(id);
+```
+There's also a manager class that acts as both an entry and service. `T` being the identifier type and `R` being the identifier type of MyEntry
+```java
+public class MyManager extends DataManager<T, R, MyEntry> {
+    
+    public MyManager(T id) {
+        super(id);
+    }
+    
+}
+```
