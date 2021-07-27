@@ -1,27 +1,27 @@
 package nl.iobyte.tests;
 
-import nl.iobyte.dataapi.injector.Injector;
+import nl.iobyte.dataapi.injector.DataInjector;
 import nl.iobyte.dataapi.injector.annotations.Inject;
 import nl.iobyte.dataapi.event.interfaces.IEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class InjectorTest {
+public class DataInjectorTest {
 
     @Test
     public void test() {
-        Injector injector = new Injector();
+        DataInjector dataInjector = new DataInjector();
 
         //Object
-        injector.register(String.class, () -> "Some value");
-        Assert.assertTrue("Object not found in register", injector.has(String.class));
+        dataInjector.register(String.class, () -> "Some value");
+        Assert.assertTrue("Object not found in register", dataInjector.has(String.class));
 
         //Interface
-        injector.register(IEvent.class, clazz -> new IEvent() {});
-        Assert.assertTrue("Interface not found in register", injector.has(IEvent.class));
+        dataInjector.register(IEvent.class, clazz -> new IEvent() {});
+        Assert.assertTrue("Interface not found in register", dataInjector.has(IEvent.class));
 
         //Injection
-        DependencyTest test = injector.inject(DependencyTest.class);
+        DependencyTest test = dataInjector.inject(DependencyTest.class);
         Assert.assertNotNull("Inject must return instance", test);
         Assert.assertNotNull("Object injection failed", test.testString);
         Assert.assertNotNull("Interface injection failed", test.testInterface);

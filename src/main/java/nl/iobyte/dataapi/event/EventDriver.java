@@ -4,6 +4,8 @@ import nl.iobyte.dataapi.event.annotations.EventHandler;
 import nl.iobyte.dataapi.event.interfaces.IEvent;
 import nl.iobyte.dataapi.event.interfaces.IEventHandler;
 import nl.iobyte.dataapi.event.objects.Listener;
+import nl.iobyte.dataapi.initializer.DataInitializer;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -64,12 +66,9 @@ public class EventDriver {
      * @return EventDriver
      */
     public EventDriver register(Class<?> clazz) {
-        Object obj;
-        try {
-            obj = clazz.getConstructor().newInstance();
-        } catch (Exception e) {
+        Object obj = DataInitializer.newInstance(clazz);
+        if(obj == null)
             return this;
-        }
 
         return register(obj);
     }

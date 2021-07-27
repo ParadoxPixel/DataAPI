@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-public class Injector {
+public class DataInjector {
 
     private final Map<Class<?>, Supplier<?>> entries = new ConcurrentHashMap<>();
     private final Map<Class<?>, InterfaceSupplier<?>> interfaces = new ConcurrentHashMap<>();
