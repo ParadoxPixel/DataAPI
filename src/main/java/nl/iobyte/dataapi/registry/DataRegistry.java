@@ -32,7 +32,7 @@ public class DataRegistry<R> {
         if(entries.containsKey(clazz))
             return (T) entries.get(clazz);
 
-        T instance = DataInitializer.getInstance(clazz);
+        T instance = DataInitializer.newInstance(clazz);
         if(instance == null)
             return null;
 

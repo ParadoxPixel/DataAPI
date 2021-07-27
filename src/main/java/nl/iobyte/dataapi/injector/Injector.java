@@ -128,7 +128,7 @@ public class Injector {
      * @return T
      */
     public <T> T inject(Class<T> clazz) {
-        T instance = DataInitializer.getInstance(clazz);
+        T instance = DataInitializer.newInstance(clazz);
         if(instance == null)
             return null;
 
