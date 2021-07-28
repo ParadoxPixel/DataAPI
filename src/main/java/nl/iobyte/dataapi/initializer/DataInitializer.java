@@ -1,157 +1,12 @@
 package nl.iobyte.dataapi.initializer;
 
+import nl.iobyte.dataapi.reflection.ReflectionUtil;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Map;
 
 public class DataInitializer {
-
-    /**
-     * Call method without parameters, with clazz
-     * @param clazz Class<?>
-     * @param name String
-     * @param <T> T
-     * @return T
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T callMethod(Class<?> clazz, String name) {
-        try {
-            Method method = clazz.getMethod(name);
-            method.setAccessible(true);
-            return (T) method.invoke(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Call method without parameters, with object
-     * @param obj Object
-     * @param name String
-     * @param <T> T
-     * @return T
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T callMethod(Object obj, String name) {
-        try {
-            Method method = obj.getClass().getDeclaredMethod(name);
-            method.setAccessible(true);
-            return (T) method.invoke(obj);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Call method with parameters, with class
-     * @param clazz Class<?>
-     * @param name String
-     * @param objects Object[]
-     * @param <T> T
-     * @return T
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T callMethod(Class<?> clazz, String name, Object... objects) {
-        if(clazz == null)
-            return null;
-
-        Class<?>[] parameterTypes;
-        Class<?> a,b;
-        Method method = null;
-        for(Method m : clazz.getMethods()) {
-            if(!m.getName().equals(name))
-                continue;
-
-            if(m.getParameterCount() != objects.length)
-                continue;
-
-            parameterTypes = m.getParameterTypes();
-            for(int i = 0; i < objects.length; i++) {
-                a = toPrimitive(parameterTypes[i]);
-                if(a.isPrimitive() && objects[i] == null)
-                    break;
-
-                if(objects[i] != null) {
-                    b = toPrimitive(objects[i].getClass());
-                    if (!a.isAssignableFrom(b))
-                        break;
-                }
-
-                if(i == (objects.length - 1))
-                    method = m;
-            }
-
-            if(method != null)
-                break;
-        }
-
-        if(method == null)
-            return null;
-
-        try {
-            method.setAccessible(true);
-            return (T) method.invoke(null, objects);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Call method with parameters, with object
-     * @param obj Object
-     * @param name String
-     * @param objects Object[]
-     * @param <T> T
-     * @return T
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T callMethod(Object obj, String name, Object... objects) {
-        if(obj == null)
-            return null;
-
-        Class<?>[] parameterTypes;
-        Class<?> a,b;
-        Method method = null;
-        for(Method m : obj.getClass().getDeclaredMethods()) {
-            if(!m.getName().equals(name))
-                continue;
-
-            if(m.getParameterCount() != objects.length)
-                continue;
-
-            parameterTypes = m.getParameterTypes();
-            for(int i = 0; i < objects.length; i++) {
-                a = toPrimitive(parameterTypes[i]);
-                if(a.isPrimitive() && objects[i] == null)
-                    break;
-
-                if(objects[i] != null) {
-                    b = toPrimitive(objects[i].getClass());
-                    if (!a.isAssignableFrom(b))
-                        break;
-                }
-
-                if(i == (objects.length - 1))
-                    method = m;
-            }
-
-            if(method != null)
-                break;
-        }
-
-        if(method == null)
-            return null;
-
-        try {
-            method.setAccessible(true);
-            return (T) method.invoke(obj, objects);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     /**
      * Get instance of class from empty constructor
@@ -206,37 +61,12 @@ public class DataInitializer {
         if(clazz == null)
             return null;
 
-        Class<?>[] parameterTypes;
-        Class<?> a,b;
-        Constructor<?> constructor = null;
-        for(Constructor<?> c : clazz.getConstructors()) {
-            if(c.getParameterCount() != objects.length)
-                continue;
-
-            parameterTypes = c.getParameterTypes();
-            for(int i = 0; i < objects.length; i++) {
-                a = toPrimitive(parameterTypes[i]);
-                if(a.isPrimitive() && objects[i] == null)
-                    break;
-
-                if(objects[i] != null) {
-                    b = toPrimitive(objects[i].getClass());
-                    if (!a.isAssignableFrom(b))
-                        break;
-                }
-
-                if(i == (objects.length - 1))
-                    constructor = c;
-            }
-
-            if(constructor != null)
-                break;
-        }
-
+        Constructor<?> constructor = ReflectionUtil.getConstructor(clazz, objects);
         if(constructor == null)
             return null;
 
         try {
+            constructor.setAccessible(true);
             return (T) constructor.newInstance(objects);
         } catch (Exception e) {
             e.printStackTrace();
@@ -245,39 +75,48 @@ public class DataInitializer {
     }
 
     /**
-     * Get primitive of class if boolean,short,integer,double,float,long,byte,char
+     * Call static method of class
      * @param clazz Class<?>
-     * @return Class<?>
+     * @param name String
+     * @param objects Object[]
+     * @param <T> T
+     * @return T
      */
-    public static Class<?> toPrimitive(Class<?> clazz) {
-        if(clazz.isPrimitive() || clazz.isInterface() || clazz.isEnum())
-            return clazz;
+    @SuppressWarnings("unchecked")
+    public static <T> T callMethod(Class<?> clazz, String name, Object... objects) {
+        Method method = ReflectionUtil.getMethod(clazz.getDeclaredMethods(), name, objects);
+        if(method == null)
+            return null;
 
-        if(Boolean.class.equals(clazz))
-            return boolean.class;
+        try {
+            method.setAccessible(true);
+            return (T) method.invoke(null, objects);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-        if(Short.class.equals(clazz))
-            return short.class;
+    /**
+     * Call method of object
+     * @param obj Object
+     * @param name String
+     * @param objects Object[]
+     * @param <T> T
+     * @return T
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T callMethod(Object obj, String name, Object... objects) {
+        Method method = ReflectionUtil.getMethod(obj.getClass().getDeclaredMethods(), name, objects);
+        if(method == null)
+            return null;
 
-        if(Integer.class.equals(clazz))
-            return int.class;
-
-        if(Double.class.equals(clazz))
-            return double.class;
-
-        if(Float.class.equals(clazz))
-            return float.class;
-
-        if(Long.class.equals(clazz))
-            return long.class;
-
-        if(Byte.class.equals(clazz))
-            return byte.class;
-
-        if(Character.class.equals(clazz))
-            return char.class;
-
-        return clazz;
+        try {
+            method.setAccessible(true);
+            return (T) method.invoke(obj, objects);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
