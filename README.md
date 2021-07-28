@@ -22,6 +22,26 @@ MyClass instance = DataInitializer.newInstance(MyClass.class, objects);
 MyClass instance = DataInitializer.newInstance(MyClass.class, "String #1", "String #2");
 ```
 
+Calling a static method. Return value is automatically casted while void always returns null
+```java
+//Without parameters
+T value = DataInitializer.callMethod(MyClass.class, "method_name");
+
+//With parameters
+T value = DataInitializer.callMethod(MyClass.class, "method_name", "Parameter #1", 2);
+```
+
+Calling a non-static method. Return value is automatically casted while void always returns null
+```java
+MyClass instance;
+
+//Without parameters
+T value = DataInitializer.callMethod(instance, "method_name");
+
+//With parameters
+T value = DataInitializer.callMethod(instance, "method_name", "Parameter #1", 2);
+```
+
 ### DataRegistry
 ```java
 //Get new registry for base class
