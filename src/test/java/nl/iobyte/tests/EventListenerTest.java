@@ -4,7 +4,7 @@ import nl.iobyte.dataapi.event.EventDriver;
 import nl.iobyte.dataapi.event.interfaces.IEvent;
 import org.junit.Assert;
 import org.junit.Test;
-
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EventListenerTest {
@@ -16,11 +16,14 @@ public class EventListenerTest {
 
         EventDriver eventDriver = new EventDriver();
 
-        eventDriver.on(FirstTestEvent.class)
-                .addHandler((e) -> goodTriggered.set(true));
+        //Simple handler
+        eventDriver.on(FirstTestEvent.class, a -> goodTriggered.set(true));
+        eventDriver.on(SecondTestEvent.class, b -> badTriggered.set(true));
 
-        eventDriver.on(SecondTestEvent.class)
-                .addHandler(b -> badTriggered.set(true));
+        //Complex handler
+        eventDriver.on(FirstTestEvent.class)
+                .filter(Objects::isNull)
+                .handler(a -> badTriggered.set(true));
 
         eventDriver.fire(new FirstTestEvent());
 

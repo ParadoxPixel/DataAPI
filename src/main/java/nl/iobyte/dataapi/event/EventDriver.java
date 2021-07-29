@@ -3,9 +3,9 @@ package nl.iobyte.dataapi.event;
 import nl.iobyte.dataapi.event.annotations.EventHandler;
 import nl.iobyte.dataapi.event.interfaces.IEvent;
 import nl.iobyte.dataapi.event.interfaces.IEventHandler;
+import nl.iobyte.dataapi.event.objects.EventHandlerBuilder;
 import nl.iobyte.dataapi.event.objects.Listener;
 import nl.iobyte.dataapi.initializer.DataInitializer;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -86,16 +86,14 @@ public class EventDriver {
     }
 
     /**
-     * Get listener for event
-     * @param event Class<T>
-     * @param <T> IEvent
-     * @return Listener<T>
+     * Get builder for event
+     * @param event Class<?>
+     * @param <T> T
+     * @return EventHandlerBuilder<T>
      */
     @SuppressWarnings("unchecked")
-    public <T extends IEvent> Listener<T> on(Class<T> event) {
-        Listener<T> listener = (Listener<T>) listeners.getOrDefault(event, new Listener<>());
-        listeners.put(event, listener);
-        return listener;
+    public <T extends IEvent> EventHandlerBuilder<T> on(Class<T> event) {
+        return new EventHandlerBuilder<>(this, event);
     }
 
     /**
@@ -105,8 +103,12 @@ public class EventDriver {
      * @param <T> IEvent
      * @return EventDriver
      */
+    @SuppressWarnings("unchecked")
     public <T extends IEvent> EventDriver on(Class<T> event, IEventHandler<T> handler) {
-        on(event).addHandler(handler);
+        Listener<T> listener = (Listener<T>) listeners.getOrDefault(event, new Listener<>());
+        listener.addHandler(handler);
+
+        listeners.putIfAbsent(event, listener);
         return this;
     }
 

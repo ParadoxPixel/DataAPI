@@ -9,6 +9,12 @@ public class Filter<T> {
 
     private final List<Function<T, Boolean>> filters = new ArrayList<>();
 
+    /**
+     * Get filter of type T
+     * @param clazz Class<T>
+     * @param <T> T
+     * @return Filter<T>
+     */
     public static <T> Filter<T> of(Class<T> clazz) {
         return new Filter<>();
     }

@@ -88,12 +88,13 @@ Add handler for event
 ```java
 EventDriver driver = new EventDriver();
 
-driver.on(MyEvent.class, () -> doSomething());
+driver.on(MyEvent.class, e -> doSomething());
 
-//Or multiple to the same event in one go
+//Or to add filters to handler
 driver.on(MyEvent.class)
-        .addHandler(() -> actionA())
-        .addHandler(() -> actionB());
+        .filter(e -> e.getValue() != null)
+        .filter(e -> e.getAnswer() == 42)
+        .handler(e -> actionB());
 ```
 
 And to fire the event
