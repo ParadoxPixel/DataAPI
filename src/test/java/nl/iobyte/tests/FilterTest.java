@@ -9,8 +9,8 @@ public class FilterTest {
 
     @Test
     public void test() {
-        Filter<String> filter = new Filter<>();
-        filter.add(Objects::nonNull)
+        Filter<String> filter = Filter.of(String.class)
+                .add(Objects::nonNull)
                 .add(str -> !str.isEmpty());
 
         Assert.assertTrue("Filter should return true", filter.check("Test"));

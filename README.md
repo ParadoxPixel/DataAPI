@@ -209,6 +209,11 @@ Filter<Person> filter = new Filter<>();
 filter.add(p -> p != null)
         .add(p -> p.getAge() >= 18);
 
+//Or in one line
+Filter<Person> filter = Filter.of(Person.class)
+        .add(p -> p != null)
+        .add(p -> p.getAge() >= 18);
+
 //Use the filter
 if(filter.check(person))
     //Do something with valid person

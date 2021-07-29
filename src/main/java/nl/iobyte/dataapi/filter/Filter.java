@@ -9,6 +9,10 @@ public class Filter<T> {
 
     private final List<Function<T, Boolean>> filters = new ArrayList<>();
 
+    public static <T> Filter<T> of(Class<T> clazz) {
+        return new Filter<>();
+    }
+
     /**
      * Add rule to filter
      * @param f Function<T, Boolean>
