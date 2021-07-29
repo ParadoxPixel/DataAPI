@@ -29,6 +29,26 @@ public class EventHandlerBuilder<T extends IEvent> {
     }
 
     /**
+     * Add filter to handler from object
+     * @param obj Object
+     * @return EventHandlerBuilder<T>
+     */
+    public EventHandlerBuilder<T> filter(Object obj) {
+        filter.add(obj);
+        return this;
+    }
+
+    /**
+     * Add filter to handler from class
+     * @param clazz Class<?>
+     * @return EventHandlerBuilder<T>
+     */
+    public EventHandlerBuilder<T> filter(Class<?> clazz) {
+        filter.add(clazz);
+        return this;
+    }
+
+    /**
      * Register handler
      * @param handler IEventHandler<T>
      */
