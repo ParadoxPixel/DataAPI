@@ -166,8 +166,8 @@ List<Person> people;
 Stepper<Person> stepper=new Stepper(people);
 
 //A crude example, method doesn't actually exist
-repeatingTask(()->{
-    Person person=stepper.next();//Get the next in the list
+repeatingTask(() -> {
+    Person person = stepper.next();//Get the next in the list
     //Or previous with stepper.previous();
 });
 ```
@@ -205,8 +205,8 @@ repeatingTask(() -> {
 Replacement for a set of `if return` statements.
 ```java
 //Create a filter
-Filter<Person> filter = new Filter<>()
-        .add(p -> p != null)
+Filter<Person> filter = new Filter<>();
+filter.add(p -> p != null)
         .add(p -> p.getAge() >= 18);
 
 //Use the filter
