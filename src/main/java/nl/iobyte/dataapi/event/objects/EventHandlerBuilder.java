@@ -10,11 +10,12 @@ public class EventHandlerBuilder<T extends IEvent> {
 
     private final EventDriver driver;
     private final Class<T> clazz;
-    private final Filter<T> filter = new Filter<>();
+    private final Filter<T> filter;
 
     public EventHandlerBuilder(EventDriver driver, Class<T> clazz) {
         this.driver = driver;
         this.clazz = clazz;
+        this.filter = Filter.of(clazz);
     }
 
     /**
