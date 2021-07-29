@@ -134,21 +134,69 @@ service.add(entry);
 service.has(id);
 
 //Get entry of type T
-MyEntry entry = service.get(id);
+        MyEntry entry=service.get(id);
 
 //Or get option of entry
-Optional<MyEntry> option = service.getOptional(id);
+        Optional<MyEntry> option=service.getOptional(id);
 
 //Remove entry with id and return value
-MyEntry value = service.remove(id);
+        MyEntry value=service.remove(id);
 ```
-There's also a manager class that acts as both an entry and service. `T` being the identifier type and `R` being the identifier type of MyEntry
+
+There's also a manager class that acts as both an entry and service. `T` being the identifier type and `R` being the
+identifier type of MyEntry
+
 ```java
 public class MyManager extends DataManager<T, R, MyEntry> {
-    
+
     public MyManager(T id) {
         super(id);
     }
-    
+
 }
+```
+
+### Stepper
+
+This class can be used to "iterate" of sorts over a list without providing access to the list. Useful when you want to
+do things in "steps" to distribute load over multiple threads for instance or multiple ticks
+
+```java
+List<Person> people;
+Stepper<Person> stepper=new Stepper(people);
+
+//A crude example, method doesn't actually exist
+repeatingTask(()->{
+    Person person=stepper.next();//Get the next in the list
+    //Or previous with stepper.previous();
+});
+```
+
+### Bucket
+
+Spread data over multiple partitions to make it more digestible. It supports two partition strategies: `LOWEST_SIZE` for
+even distribution, and `RANDOM` for random distribution. You can also implement your own by
+using `IGenericPartitionStrategy` or `IPartitionStrategy`.
+
+Example usage:
+
+```java
+//You can use either HASH(for HashSet) or CONCURRENT(for a concurrent Set), or implement your own with AbstractBucket or IBucket
+//DefaultBucket is an enum with a factory for these basic implementations
+IBucket<Person> bucket = DefaultBucket.HASH.newInstance(
+        10, //Amount of partitions
+        PartitionStrategies.LOWEST_SIZE //Partition strategy
+);
+
+//Use basic set modifications
+bucket.add(person);
+bucket.remove(person);
+
+//A crude example, method doesn't actually exist
+repeatingTask(() -> {
+    //We can use the stepper to get a different partition per run
+    IBucketPartition<Person> people = bucket.asStepper.next();
+    for(Person person : people)
+        //Do something with the entry
+});
 ```
