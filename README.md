@@ -206,11 +206,11 @@ repeatingTask(() -> {
 Replacement for a set of `if return` statements.
 ```java
 //Create a filter
-Filter<Person> filter = new Filter<>();
+Filter<Person> filter = Filter.of(Person.class);
 filter.add(p -> p != null)
         .add(p -> p.getAge() >= 18);
 
-//Or in one line
+//Or inline
 Filter<Person> filter = Filter.of(Person.class)
         .add(p -> p != null)
         .add(p -> p.getAge() >= 18);
@@ -227,4 +227,25 @@ filter.check(person, result -> {
         //Failed
     }
 })
+```
+We can also add checks from classes or objects
+```java
+public class MyFilters {
+
+    @FilterCheck
+    public boolean checkAge(Person person) {
+        return person.getAge() >= 18;
+    }
+
+    @FilterCheck
+    public boolean notNull(Person person) {
+        return person != null;
+    }
+}
+
+//Load it from clazz
+filter.add(MyFilters.class);
+
+//Or from instance
+filter.add(new MyFilters());
 ```
