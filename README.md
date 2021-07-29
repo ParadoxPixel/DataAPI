@@ -134,13 +134,13 @@ service.add(entry);
 service.has(id);
 
 //Get entry of type T
-        MyEntry entry=service.get(id);
+MyEntry entry = service.get(id);
 
 //Or get option of entry
-        Optional<MyEntry> option=service.getOptional(id);
+Optional<MyEntry> option = service.getOptional(id);
 
 //Remove entry with id and return value
-        MyEntry value=service.remove(id);
+MyEntry value = service.remove(id);
 ```
 
 There's also a manager class that acts as both an entry and service. `T` being the identifier type and `R` being the
@@ -199,4 +199,26 @@ repeatingTask(() -> {
     for(Person person : people)
         //Do something with the entry
 });
+```
+
+### Filter
+Replacement for a set of `if return` statements.
+```java
+//Create a filter
+Filter<Person> filter = new Filter<>()
+        .add(p -> p != null)
+        .add(p -> p.getAge() >= 18);
+
+//Use the filter
+if(filter.check(person))
+    //Do something with valid person
+    
+//Or use it with a consumer
+filter.check(person, result -> {
+    if(result){
+        //Passed
+    } else{
+        //Failed
+    }
+})
 ```
