@@ -1,9 +1,9 @@
 package nl.iobyte.dataapi.namespace;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NamespaceMap<T> {
@@ -62,37 +62,46 @@ public class NamespaceMap<T> {
     }
 
     /**
-     * Get list of values at path
+     * Get set of values at path
      * @param path String
-     * @return List<T>
+     * @return Set<T>
      */
-    public List<T> get(String path) {
+    public Set<T> get(String path) {
         return get(0, path.split("\\."));
     }
 
     /**
-     * Get list of values at path
+     * Get set of values at path
      * @param i Integer
      * @param args String[]
-     * @return List<T>
+     * @return Set<T>
      */
     @SuppressWarnings("unchecked")
-    private List<T> get(int i, String... args) {
+    private Set<T> get(int i, String... args) {
         if(args.length <= i)
             return get(0, "");
 
-        List<T> list = new ArrayList<>();
+        Set<T> list = new HashSet<>();
         if(args[i].contains("*")) {
-            String str = args[i].replaceAll("\\*", "(.*)");
-            for(String key : map.keySet()) {
-                if(!key.matches(str))
-                    continue;
+            if(args[i].equals("**")) {
+                for(Object obj : map.values()) {
+                    if (obj instanceof NamespaceMap) {
+                        list.addAll(Objects.requireNonNull(((NamespaceMap<T>) obj).get(0, "**")));
+                        continue;
+                    }
 
-                args[i] = key;
-                list.addAll(get(i, args));
+                    list.add((T) obj);
+                }
+            } else {
+                String str = args[i].replaceAll("\\*", "(.*)");
+                for (String key : map.keySet()) {
+                    if (!key.matches(str))
+                        continue;
+
+                    args[i] = key;
+                    list.addAll(get(i, args));
+                }
             }
-
-            args[i] = "*";
         } else {
             Object obj = map.get(args[i]);
             if (obj == null) {
@@ -120,9 +129,9 @@ public class NamespaceMap<T> {
     /**
      * Remove values at path
      * @param path String
-     * @return List<T>
+     * @return Set<T>
      */
-    public List<T> remove(String path) {
+    public Set<T> remove(String path) {
         return remove(0, path.split("\\."));
     }
 
@@ -130,22 +139,34 @@ public class NamespaceMap<T> {
      * Remove values at path
      * @param i Integer
      * @param args String[]
-     * @return List<T>
+     * @return Set<T>
      */
     @SuppressWarnings("unchecked")
-    private List<T> remove(int i, String... args) {
+    private Set<T> remove(int i, String... args) {
         if(args.length <= i)
             return remove(0, "");
 
-        List<T> list = new ArrayList<>();
+        Set<T> list = new HashSet<>();
         if(args[i].contains("*")) {
-            String str = args[i].replaceAll("\\*", "(.*)");
-            for(String key : map.keySet()) {
-                if(!key.matches(str))
-                    continue;
+            if(args[i].equals("**")) {
+                for(Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getValue() instanceof NamespaceMap) {
+                        list.addAll(Objects.requireNonNull(((NamespaceMap<T>) entry.getValue()).remove(0, "**")));
+                    } else {
+                        list.add((T) entry.getValue());
+                    }
 
-                args[i] = key;
-                list.addAll(remove(i, args));
+                    map.remove(entry.getKey());
+                }
+            } else {
+                String str = args[i].replaceAll("\\*", "(.*)");
+                for (String key : map.keySet()) {
+                    if (!key.matches(str))
+                        continue;
+
+                    args[i] = key;
+                    list.addAll(remove(i, args));
+                }
             }
         } else {
             Object obj = map.get(args[i]);

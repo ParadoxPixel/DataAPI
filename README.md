@@ -41,7 +41,7 @@ T value = DataInitializer.callMethod(instance, "method_name");
 //With parameters
 T value = DataInitializer.callMethod(instance, "method_name", "Parameter #1", 2);
 ```
-
+---
 ### DataRegistry
 ```java
 //Get new registry for base class
@@ -58,7 +58,7 @@ ClassThatExtends instance = registry.get(ClassThatExtends.class);
 //Or just register and get instance
 ClassThatExtends instance = registry.register(ClassThatExtends.class);
 ```
-
+---
 ### DataInjector
 ```java
 DataInjector dataInjector = new DataInjector();
@@ -75,7 +75,7 @@ MyClass instance = dataInjector.inject(MyClass.class);
 //Injection from object
 dataInjector.inject(instance);
 ```
-
+---
 ### EventDriver
 Register event handlers from listener class
 ```java
@@ -106,7 +106,7 @@ EventDriver driver = new EventDriver();
 //Fire event
 driver.fire(new MyEvent());
 ```
-
+---
 ### DataService
 Create an entry class
 ```java
@@ -156,7 +156,7 @@ public class MyManager extends DataManager<T, R, MyEntry> {
 
 }
 ```
-
+---
 ### Stepper
 
 This class can be used to "iterate" of sorts over a list without providing access to the list. Useful when you want to
@@ -172,7 +172,7 @@ repeatingTask(() -> {
     //Or previous with stepper.previous();
 });
 ```
-
+---
 ### Bucket
 
 Spread data over multiple partitions to make it more digestible. It supports two partition strategies: `LOWEST_SIZE` for
@@ -201,7 +201,7 @@ repeatingTask(() -> {
         //Do something with the entry
 });
 ```
-
+---
 ### Filter
 Replacement for a set of `if return` statements.
 ```java
@@ -249,7 +249,7 @@ filter.add(MyFilters.class);
 //Or from instance
 filter.add(new MyFilters());
 ```
-
+---
 ### NamespaceMap
 Can be used to store values at a path and retrieve it with wildcards
 ```java
@@ -266,4 +266,10 @@ List<MyClass> values = map.get("my.path.to.*");//Will match anything that is the
 map.get("my.path.to.v*"); //Wildcard at end
 map.get("my.path.to.*e"); //Wildcard at start
 map.get("my.path.to.v*e"); //Wildcard in between
+
+//You can also use a double wildcard to ignore the rest of the path
+map.get("my.path.**"); //Will match any path starting with `my.path`
 ```
+---
+### MessageBroker
+TODO
