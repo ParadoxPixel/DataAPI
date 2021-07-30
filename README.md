@@ -249,3 +249,21 @@ filter.add(MyFilters.class);
 //Or from instance
 filter.add(new MyFilters());
 ```
+
+### NamespaceMap
+Can be used to store values at a path and retrieve it with wildcards
+```java
+NamespaceMap<MyClass> map = new NamespaceMap();
+map.set("my.path.to.value", new MyClass());
+
+//Be specific for a single value
+List<MyClass> values = map.get("my.path.to.value");
+
+//Or use a wildcard for multiple
+List<MyClass> values = map.get("my.path.to.*");//Will match anything that is the same length, and starts with `my.path.to`
+
+//You can also use it like so and combine these
+map.get("my.path.to.v*"); //Wildcard at end
+map.get("my.path.to.*e"); //Wildcard at start
+map.get("my.path.to.v*e"); //Wildcard in between
+```
