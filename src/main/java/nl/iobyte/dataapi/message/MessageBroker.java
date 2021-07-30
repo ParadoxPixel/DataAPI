@@ -21,20 +21,17 @@ public class MessageBroker extends NamespaceMap<MessageChannel<?>> {
         if(name.contains("*") || clazz == null)
             return null;
 
-        Set<MessageChannel<?>> channels = get(name);
-        if(channels.size() == 0) {
+        MessageChannel<?> c = first(name);
+        if(c == null) {
             MessageChannel<T> channel = new MessageChannel<>(clazz, name);
             set(name, channel);
             return channel;
-        } else if(channels.size() == 1) {
-            MessageChannel<?> channel = channels.toArray(new MessageChannel<?>[0])[0];
-            if(channel.getType() != clazz)
-                return null;
-
-            return (MessageChannel<T>) channel;
         }
 
-        return null;
+        if(c.getType() != clazz)
+            return null;
+
+        return (MessageChannel<T>) c;
     }
 
     /**

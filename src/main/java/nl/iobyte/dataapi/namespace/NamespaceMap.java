@@ -62,6 +62,19 @@ public class NamespaceMap<T> {
     }
 
     /**
+     * Get single value from map
+     * @param path String
+     * @return T
+     */
+    public T first(String path) {
+        Set<T> s = get(path);
+        if(s.isEmpty())
+            return null;
+
+        return s.iterator().next();
+    }
+
+    /**
      * Get set of values at path
      * @param path String
      * @return Set<T>

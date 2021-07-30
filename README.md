@@ -257,10 +257,10 @@ NamespaceMap<MyClass> map = new NamespaceMap();
 map.set("my.path.to.value", new MyClass());
 
 //Be specific for a single value
-List<MyClass> values = map.get("my.path.to.value");
+MyClass values = map.first("my.path.to.value");
 
 //Or use a wildcard for multiple
-List<MyClass> values = map.get("my.path.to.*");//Will match anything that is the same length, and starts with `my.path.to`
+Set<MyClass> values = map.get("my.path.to.*");//Will match anything that is the same length, and starts with `my.path.to`
 
 //You can also use it like so and combine these
 map.get("my.path.to.v*"); //Wildcard at end
