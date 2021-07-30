@@ -1,6 +1,6 @@
 package nl.iobyte.dataapi.bucket.objects;
 
-import nl.iobyte.dataapi.bucket.interfaces.IPartitionStrategy;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -3,7 +3,7 @@ package nl.iobyte.tests;
 import nl.iobyte.dataapi.bucket.enums.DefaultBucket;
 import nl.iobyte.dataapi.bucket.enums.PartitionStrategies;
 import nl.iobyte.dataapi.bucket.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.interfaces.IBucketPartition;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
 import org.junit.Assert;
 import org.junit.Test;
 

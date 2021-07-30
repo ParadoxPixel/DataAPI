@@ -1,4 +1,6 @@
-package nl.iobyte.dataapi.bucket.interfaces;
+package nl.iobyte.dataapi.bucket.interfaces.partition;
+
+import nl.iobyte.dataapi.bucket.interfaces.IBucket;
 
 public interface IGenericPartitionStrategy extends IPartitionStrategy<Object> {
 

@@ -2,9 +2,9 @@ package nl.iobyte.dataapi.bucket.enums;
 
 import nl.iobyte.dataapi.bucket.interfaces.IBucket;
 import nl.iobyte.dataapi.bucket.interfaces.IBukkitFactory;
-import nl.iobyte.dataapi.bucket.interfaces.IPartitionStrategy;
 import nl.iobyte.dataapi.bucket.objects.ConcurrentBucket;
 import nl.iobyte.dataapi.bucket.objects.HashSetBucket;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
 
 public enum DefaultBucket implements IBukkitFactory {
 

@@ -1,5 +1,7 @@
 package nl.iobyte.dataapi.bucket.interfaces;
 
+import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
+
 public interface IBukkitFactory {
 
     /**

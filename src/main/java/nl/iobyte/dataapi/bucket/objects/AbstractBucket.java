@@ -1,8 +1,8 @@
 package nl.iobyte.dataapi.bucket.objects;
 
 import nl.iobyte.dataapi.bucket.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.interfaces.IBucketPartition;
-import nl.iobyte.dataapi.bucket.interfaces.IPartitionStrategy;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.*;
 import java.util.function.Consumer;

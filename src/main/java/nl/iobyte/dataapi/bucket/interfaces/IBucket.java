@@ -1,5 +1,6 @@
 package nl.iobyte.dataapi.bucket.interfaces;
 
+import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.List;
 import java.util.Set;

@@ -1,8 +1,8 @@
 package nl.iobyte.dataapi.bucket.enums;
 
 import nl.iobyte.dataapi.bucket.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.interfaces.IBucketPartition;
-import nl.iobyte.dataapi.bucket.interfaces.IGenericPartitionStrategy;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.interfaces.partition.IGenericPartitionStrategy;
 import java.util.concurrent.ThreadLocalRandom;
 
 public enum PartitionStrategies implements IGenericPartitionStrategy {

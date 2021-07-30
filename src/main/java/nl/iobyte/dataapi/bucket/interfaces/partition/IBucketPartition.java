@@ -1,4 +1,4 @@
-package nl.iobyte.dataapi.bucket.interfaces;
+package nl.iobyte.dataapi.bucket.interfaces.partition;
 
 import java.util.Collection;
 import java.util.Set;
