@@ -272,4 +272,37 @@ map.get("my.path.**"); //Will match any path starting with `my.path`
 ```
 ---
 ### MessageBroker
-TODO
+Messaging channels with namespace path's
+```java
+MessageBroker broker = new MessageBroker();
+
+//Get will get the channel or make a new one if it doesn't exist
+MessageChannel<MyMessage> channel = broker.get(
+        "my.message.path",
+        MyMessage.class
+);
+
+//Channel is null if the broker is unable to get and create the channel
+if(channel == null)
+    return;
+
+ChannelAgent<MyMessage> agent = channel.newAgent();
+
+//You can add multiple listeners to the same agent
+agent.listen(msg -> {
+    //Do something with the message
+});
+
+//Send message to path(works the same as `NamespaceMap.get`)
+broker.send(
+        new MyMessage(),
+        "my.message.path"
+);
+
+//Or multiple paths, it'll only send to the channels that can handle the message type
+broker.send(
+        new MyMessage(),
+        "my.message.path",
+        "my.message.data.*"
+);
+```
