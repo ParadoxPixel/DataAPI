@@ -11,6 +11,6 @@ public interface IBukkitFactory {
      * @param <T>      T
      * @return IBucket<T>
      */
-    <T> IBucket<T> newInstance(int size, ISetPartitionStrategy<?> strategy);
+    <T> ISetBucket<T> newInstance(int size, ISetPartitionStrategy<?> strategy);
 
 }

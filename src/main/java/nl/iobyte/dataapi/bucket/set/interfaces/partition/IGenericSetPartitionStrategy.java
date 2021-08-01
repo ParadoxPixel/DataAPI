@@ -1,6 +1,6 @@
 package nl.iobyte.dataapi.bucket.set.interfaces.partition;
 
-import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.ISetBucket;
 
 public interface IGenericSetPartitionStrategy extends ISetPartitionStrategy<Object> {
 
@@ -9,7 +9,7 @@ public interface IGenericSetPartitionStrategy extends ISetPartitionStrategy<Obje
      * @param bucket IBucket
      * @return Integer
      */
-    int allocate(IBucket<?> bucket);
+    int allocate(ISetBucket<?> bucket);
 
     /**
      * Casts to type T
@@ -28,7 +28,7 @@ public interface IGenericSetPartitionStrategy extends ISetPartitionStrategy<Obje
      * @return Integer
      */
     @Deprecated
-    default int allocate(Object object, IBucket<Object> bucket) {
+    default int allocate(Object object, ISetBucket<Object> bucket) {
         return allocate(bucket);
     }
 

@@ -6,8 +6,8 @@ import nl.iobyte.dataapi.bucket.map.interfaces.IMapBucket;
 import nl.iobyte.dataapi.bucket.map.interfaces.partition.IMapBucketPartition;
 import nl.iobyte.dataapi.bucket.set.enums.DefaultSetBucket;
 import nl.iobyte.dataapi.bucket.set.enums.SetPartitionStrategies;
-import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.set.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.set.interfaces.ISetBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetBucketPartition;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class BucketTest {
     @Test
     public void testSet() {
         int partitions = 5;
-        IBucket<String> bucket = DefaultSetBucket.HASH.newInstance(
+        ISetBucket<String> bucket = DefaultSetBucket.HASH.newInstance(
                 partitions,
                 SetPartitionStrategies.LOWEST_SIZE
         );
@@ -29,7 +29,7 @@ public class BucketTest {
         Assert.assertEquals("Bucket size should be 20", 20, bucket.size());
 
         int i = 0;
-        for (IBucketPartition<String> partition : bucket.getPartitions())
+        for (ISetBucketPartition<String> partition : bucket.getPartitions())
             i += partition.size();
 
         Assert.assertEquals("Contents of partitions should add up to 20", 20, i);

@@ -177,16 +177,15 @@ repeatingTask(() -> {
 
 Spread data over multiple partitions to make it more digestible. It supports two partition strategies: `LOWEST_SIZE` for
 even distribution, and `RANDOM` for random distribution. You can also implement your own by
-using `IGenericPartitionStrategy` or `IPartitionStrategy`.
+using `IGeneric[Set,Map]PartitionStrategy` or `I[Set,Map]PartitionStrategy`.
 
-Example usage:
-
+Example usage for set:
 ```java
 //You can use either HASH(for HashSet) or CONCURRENT(for a concurrent Set), or implement your own with AbstractBucket or IBucket
-//DefaultBucket is an enum with a factory for these basic implementations
-IBucket<Person> bucket = DefaultBucket.HASH.newInstance(
+//DefaultSetBucket is an enum with a factory for these basic implementations
+ISetBucket<Person> bucket = DefaultSetBucket.HASH.newInstance(
         10, //Amount of partitions
-        PartitionStrategies.LOWEST_SIZE //Partition strategy
+        SetPartitionStrategies.LOWEST_SIZE //Partition strategy
 );
 
 //Use basic set modifications
@@ -196,8 +195,30 @@ bucket.remove(person);
 //A crude example, method doesn't actually exist
 repeatingTask(() -> {
     //We can use the stepper to get a different partition per run
-    IBucketPartition<Person> people = bucket.asStepper.next();
+    ISetBucketPartition<Person> people = bucket.asStepper.next();
     for(Person person : people)
+        //Do something with the entry
+});
+```
+
+Example usage for map:
+```java
+//You can use either HASH(for HashMap) or CONCURRENT(for ConcurrentHashMap), or implement your own with AbstractBucket or IBucket
+//DefaultMapBucket is an enum with a factory for these basic implementations
+IMapBucket<Integer, Person> bucket = DefaultMapBucket.HASH.newInstance(
+        10, //Amount of partitions
+        MapPartitionStrategies.LOWEST_SIZE //Partition strategy
+);
+
+//Use basic set modifications
+bucket.put(person_id, person);
+bucket.remove(person_id);
+
+//A crude example, method doesn't actually exist
+repeatingTask(() -> {
+    //We can use the stepper to get a different partition per run
+    IMapBucketPartition<Integer, Person> people = bucket.asStepper.next();
+    for(Map.Entry<Integer, Person> entry : people.entrySet())
         //Do something with the entry
 });
 ```

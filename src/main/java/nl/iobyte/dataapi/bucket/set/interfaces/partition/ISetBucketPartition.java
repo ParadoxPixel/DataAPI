@@ -3,7 +3,7 @@ package nl.iobyte.dataapi.bucket.set.interfaces.partition;
 import java.util.Collection;
 import java.util.Set;
 
-public interface IBucketPartition<T> extends Set<T> {
+public interface ISetBucketPartition<T> extends Set<T> {
 
     /**
      * Gets the index of the partition

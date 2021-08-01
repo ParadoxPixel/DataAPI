@@ -1,6 +1,6 @@
 package nl.iobyte.dataapi.bucket.set.interfaces.partition;
 
-import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.ISetBucket;
 
 public interface ISetPartitionStrategy<T> {
 
@@ -10,6 +10,6 @@ public interface ISetPartitionStrategy<T> {
      * @param bucket IBucket
      * @return Integer
      */
-    int allocate(T object, IBucket<T> bucket);
+    int allocate(T object, ISetBucket<T> bucket);
 
 }

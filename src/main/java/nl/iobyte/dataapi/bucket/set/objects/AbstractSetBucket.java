@@ -1,23 +1,23 @@
 package nl.iobyte.dataapi.bucket.set.objects;
 
-import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.set.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.set.interfaces.ISetBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetBucketPartition;
 import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetPartitionStrategy;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.*;
 import java.util.function.Consumer;
 
-public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucket<T> {
+public abstract class AbstractSetBucket<T> extends AbstractSet<T> implements ISetBucket<T> {
 
     private final int size;
     private final ISetPartitionStrategy<T> strategy;
 
     private final Set<T> contents;
     private final List<Set<T>> partitions;
-    private final List<IBucketPartition<T>> partitionView;
-    private final Stepper<IBucketPartition<T>> stepper;
+    private final List<ISetBucketPartition<T>> partitionView;
+    private final Stepper<ISetBucketPartition<T>> stepper;
 
-    public AbstractBucket(int size, ISetPartitionStrategy<T> strategy) {
+    public AbstractSetBucket(int size, ISetPartitionStrategy<T> strategy) {
         this.size = size;
         this.strategy = strategy;
 
@@ -30,7 +30,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
         this.partitions = Collections.unmodifiableList(partitions);
 
         //IBucketPartition<T>
-        List<IBucketPartition<T>> partitionView = new ArrayList<>();
+        List<ISetBucketPartition<T>> partitionView = new ArrayList<>();
         for (int i = 0; i < size; i++)
             partitionView.add(new SetView(i, this.partitions.get(i)));
 
@@ -57,7 +57,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
      * @param i Integer
      * @return IBucketPartition<T>
      */
-    public IBucketPartition<T> getPartition(int i) {
+    public ISetBucketPartition<T> getPartition(int i) {
         return partitionView.get(i);
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
      * {@inheritDoc}
      * @return List<IBucketPartition < T>>
      */
-    public List<IBucketPartition<T>> getPartitions() {
+    public List<ISetBucketPartition<T>> getPartitions() {
         return partitionView;
     }
 
@@ -73,7 +73,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
      * Get cycle for bucket
      * @return Cycle<IBucketPartition < T>>
      */
-    public Stepper<IBucketPartition<T>> asStepper() {
+    public Stepper<ISetBucketPartition<T>> asStepper() {
         return stepper;
     }
 
@@ -142,13 +142,13 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
     }
 
     /**
-     * Class used to wrap the result of {@link IBucket}'s {@link #iterator()} method.
+     * Class used to wrap the result of {@link ISetBucket}'s {@link #iterator()} method.
      * <p>
      * This wrapping overrides the #remove method, and ensures that when removed,
      * elements are also removed from their backing partition.
      */
     private final class BucketIterator implements Iterator<T> {
-        private final Iterator<T> delegate = AbstractBucket.this.contents.iterator();
+        private final Iterator<T> delegate = AbstractSetBucket.this.contents.iterator();
         private T current;
 
         @Override
@@ -169,7 +169,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
             }
 
             delegate.remove();
-            for (Set<T> partition : AbstractBucket.this.partitions) {
+            for (Set<T> partition : AbstractSetBucket.this.partitions) {
                 partition.remove(current);
             }
         }
@@ -185,7 +185,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
      * Class used to wrap the backing sets returned by {@link #getPartition(int)}.
      * Prevents add, and propagates remove objects back to the parent bucket.
      */
-    private final class SetView extends AbstractSet<T> implements IBucketPartition<T> {
+    private final class SetView extends AbstractSet<T> implements ISetBucketPartition<T> {
         private final Set<T> backing;
         private final int index;
 
@@ -208,12 +208,12 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
             if (!backing.remove(o))
                 return false;
 
-            AbstractBucket.this.contents.remove(o);
+            AbstractSetBucket.this.contents.remove(o);
             return true;
         }
 
         public void clear() {
-            AbstractBucket.this.contents.removeAll(backing);
+            AbstractSetBucket.this.contents.removeAll(backing);
             backing.clear();
         }
 
@@ -273,7 +273,7 @@ public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucke
                 return;
 
             delegate.remove();
-            AbstractBucket.this.contents.remove(current);
+            AbstractSetBucket.this.contents.remove(current);
         }
 
         public void forEachRemaining(Consumer<? super T> action) {
