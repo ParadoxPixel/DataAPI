@@ -1,8 +1,8 @@
-package nl.iobyte.dataapi.bucket.interfaces.partition;
+package nl.iobyte.dataapi.bucket.set.interfaces.partition;
 
-import nl.iobyte.dataapi.bucket.interfaces.IBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
 
-public interface IGenericPartitionStrategy extends IPartitionStrategy<Object> {
+public interface IGenericSetPartitionStrategy extends ISetPartitionStrategy<Object> {
 
     /**
      * Calculates the index of the partition to use
@@ -17,8 +17,8 @@ public interface IGenericPartitionStrategy extends IPartitionStrategy<Object> {
      * @return T
      */
     @SuppressWarnings("unchecked")
-    default <T> IPartitionStrategy<T> cast() {
-        return (IPartitionStrategy<T>) this;
+    default <T> ISetPartitionStrategy<T> cast() {
+        return (ISetPartitionStrategy<T>) this;
     }
 
     /**

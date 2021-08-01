@@ -1,6 +1,6 @@
-package nl.iobyte.dataapi.bucket.interfaces;
+package nl.iobyte.dataapi.bucket.set.interfaces;
 
-import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetPartitionStrategy;
 
 public interface IBukkitFactory {
 
@@ -11,6 +11,6 @@ public interface IBukkitFactory {
      * @param <T>      T
      * @return IBucket<T>
      */
-    <T> IBucket<T> newInstance(int size, IPartitionStrategy<?> strategy);
+    <T> IBucket<T> newInstance(int size, ISetPartitionStrategy<?> strategy);
 
 }

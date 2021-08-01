@@ -1,11 +1,11 @@
-package nl.iobyte.dataapi.bucket.interfaces;
+package nl.iobyte.dataapi.bucket.map.interfaces;
 
-import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.map.interfaces.partition.IMapBucketPartition;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-public interface IBucket<T> extends Set<T> {
+public interface IMapBucket<T,R> extends Map<T,R> {
 
     /**
      * Get amount of partitions
@@ -18,18 +18,18 @@ public interface IBucket<T> extends Set<T> {
      * @param i Integer
      * @return IBucketPartition<T>
      */
-    IBucketPartition<T> getPartition(int i);
+    IMapBucketPartition<T,R> getPartition(int i);
 
     /**
      * Get partitions
      * @return List<IBucketPartition <T>>
      */
-    List<IBucketPartition<T>> getPartitions();
+    List<IMapBucketPartition<T,R>> getPartitions();
 
     /**
      * Get cycle for bucket
      * @return Stepper<IBucketPartition <T>>
      */
-    Stepper<IBucketPartition<T>> asStepper();
+    Stepper<IMapBucketPartition<T,R>> asStepper();
 
 }

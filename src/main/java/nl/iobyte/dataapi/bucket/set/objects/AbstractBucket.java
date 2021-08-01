@@ -1,8 +1,8 @@
-package nl.iobyte.dataapi.bucket.objects;
+package nl.iobyte.dataapi.bucket.set.objects;
 
-import nl.iobyte.dataapi.bucket.interfaces.IBucket;
-import nl.iobyte.dataapi.bucket.interfaces.partition.IBucketPartition;
-import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
+import nl.iobyte.dataapi.bucket.set.interfaces.IBucket;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.IBucketPartition;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetPartitionStrategy;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.*;
 import java.util.function.Consumer;
@@ -10,14 +10,14 @@ import java.util.function.Consumer;
 public abstract class AbstractBucket<T> extends AbstractSet<T> implements IBucket<T> {
 
     private final int size;
-    private final IPartitionStrategy<T> strategy;
+    private final ISetPartitionStrategy<T> strategy;
 
     private final Set<T> contents;
     private final List<Set<T>> partitions;
     private final List<IBucketPartition<T>> partitionView;
     private final Stepper<IBucketPartition<T>> stepper;
 
-    public AbstractBucket(int size, IPartitionStrategy<T> strategy) {
+    public AbstractBucket(int size, ISetPartitionStrategy<T> strategy) {
         this.size = size;
         this.strategy = strategy;
 

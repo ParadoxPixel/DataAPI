@@ -1,12 +1,12 @@
-package nl.iobyte.dataapi.bucket.objects;
+package nl.iobyte.dataapi.bucket.set.objects;
 
-import nl.iobyte.dataapi.bucket.interfaces.partition.IPartitionStrategy;
+import nl.iobyte.dataapi.bucket.set.interfaces.partition.ISetPartitionStrategy;
 import java.util.HashSet;
 import java.util.Set;
 
 public class HashSetBucket<T> extends AbstractBucket<T> {
 
-    public HashSetBucket(int size, IPartitionStrategy<T> strategy) {
+    public HashSetBucket(int size, ISetPartitionStrategy<T> strategy) {
         super(size, strategy);
     }
 

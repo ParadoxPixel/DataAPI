@@ -1,9 +1,8 @@
-package nl.iobyte.dataapi.bucket.interfaces.partition;
+package nl.iobyte.dataapi.bucket.map.interfaces.partition;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
-public interface IBucketPartition<T> extends Set<T> {
+public interface IMapBucketPartition<T,R> extends Map<T,R> {
 
     /**
      * Gets the index of the partition
@@ -17,7 +16,7 @@ public interface IBucketPartition<T> extends Set<T> {
      */
     @Override
     @Deprecated
-    default boolean add(T t) {
+    default R put(T t, R r) {
         throw new UnsupportedOperationException();
     }
 
@@ -27,7 +26,7 @@ public interface IBucketPartition<T> extends Set<T> {
      */
     @Override
     @Deprecated
-    default boolean addAll(Collection<? extends T> c) {
+    default void putAll(Map<? extends T, ? extends R> c) {
         throw new UnsupportedOperationException();
     }
 
