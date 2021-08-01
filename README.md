@@ -181,7 +181,7 @@ using `IGeneric[Set,Map]PartitionStrategy` or `I[Set,Map]PartitionStrategy`.
 
 Example usage for set:
 ```java
-//You can use either HASH(for HashSet) or CONCURRENT(for a concurrent Set), or implement your own with AbstractBucket or IBucket
+//You can use either HASH(for HashSet) or CONCURRENT(for a concurrent Set), or implement your own with AbstractSetBucket or ISetBucket
 //DefaultSetBucket is an enum with a factory for these basic implementations
 ISetBucket<Person> bucket = DefaultSetBucket.HASH.newInstance(
         10, //Amount of partitions
@@ -203,7 +203,7 @@ repeatingTask(() -> {
 
 Example usage for map:
 ```java
-//You can use either HASH(for HashMap) or CONCURRENT(for ConcurrentHashMap), or implement your own with AbstractBucket or IBucket
+//You can use either HASH(for HashMap) or CONCURRENT(for ConcurrentHashMap), or implement your own with AbstractMapBucket or IMapBucket
 //DefaultMapBucket is an enum with a factory for these basic implementations
 IMapBucket<Integer, Person> bucket = DefaultMapBucket.HASH.newInstance(
         10, //Amount of partitions
