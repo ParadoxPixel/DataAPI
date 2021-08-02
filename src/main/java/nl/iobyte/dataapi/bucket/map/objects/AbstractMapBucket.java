@@ -83,10 +83,10 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
 
     @Override
     public R put(T key, R value) {
-        R old = null;
-        if(contents.containsKey(key))
-            old = remove(key);
+        if(value == null)
+            throw new NullPointerException("MapBucket doesn't accept null values");
 
+        R old = remove(key);
         contents.put(key, value);
         partitions.get(strategy.allocate(key, value, this)).put(key, value);
         return old;
@@ -98,13 +98,11 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public R remove(Object o) {
-        if(!contents.containsKey((T) o))
+        R old = contents.remove(o);
+        if(old == null)
             return null;
 
-        R old;
-        contents.remove(o);
         for(Map<T,R> partition : this.partitions) {
             old = partition.remove(o);
             if(old != null) {
