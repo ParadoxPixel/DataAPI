@@ -93,6 +93,11 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
     }
 
     @Override
+    public R get(Object key) {
+        return contents.get(key);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public R remove(Object o) {
         if(!contents.containsKey((T) o))
