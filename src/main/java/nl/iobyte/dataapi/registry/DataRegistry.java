@@ -1,18 +1,21 @@
 package nl.iobyte.dataapi.registry;
 
 import nl.iobyte.dataapi.initializer.DataInitializer;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DataRegistry<R> {
 
-    private final Map<Class<? extends R>, R> entries = new ConcurrentHashMap<>();
+    private final Map<Class<? extends R>, R> entries = new LinkedHashMap<>();
     private final List<Consumer<R>> consumers = new ArrayList<>();
+
+    /**
+     * Get registered entries
+     * @return Collection<R>
+     */
+    public Collection<R> getEntries() {
+        return entries.values();
+    }
 
     /**
      * Add consumer to registry
@@ -50,7 +53,35 @@ public class DataRegistry<R> {
     @SafeVarargs
     public final void registerBulk(Class<? extends R>... classes) {
         for(Class<? extends R> clazz : classes)
-            register(clazz);
+            if(register(clazz) == null)
+                System.out.println("Failed to register class: "+clazz.getCanonicalName());
+    }
+
+    /**
+     * Register an entry from instance
+     * @param obj T
+     * @param <T> IService
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends R> T register(T obj) {
+        if(entries.containsKey(obj.getClass()))
+            return (T) entries.get(obj.getClass());
+
+        entries.put((Class<? extends R>) obj.getClass(), obj);
+        for(Consumer<R> consumer : consumers)
+            consumer.accept(obj);
+
+        return obj;
+    }
+
+    /**
+     * Register multiple entries
+     * @param objects T[]
+     */
+    @SafeVarargs
+    public final <T extends R> void registerBulk(T... objects) {
+        for(T obj : objects)
+            register(obj);
     }
 
     /**

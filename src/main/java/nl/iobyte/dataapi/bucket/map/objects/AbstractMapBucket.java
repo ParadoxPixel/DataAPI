@@ -6,7 +6,7 @@ import nl.iobyte.dataapi.bucket.map.interfaces.partition.IMapPartitionStrategy;
 import nl.iobyte.dataapi.stepper.Stepper;
 import java.util.*;
 
-public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements IMapBucket<T,R> {
+public abstract class AbstractMapBucket<T,R> implements IMapBucket<T,R> {
 
     private final int size;
     private final IMapPartitionStrategy<T,R> strategy;
@@ -76,11 +76,36 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
         return stepper;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     * @return Set<Entry<T,R>>
+     */
     public Set<Entry<T,R>> entrySet() {
         return Collections.unmodifiableSet(contents.entrySet());
     }
 
+    /**
+     * {@inheritDoc}
+     * @return Set<T>
+     */
+    public Set<T> keySet() {
+        return contents.keySet();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return Collection<R>
+     */
+    public Collection<R> values() {
+        return contents.values();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param key T
+     * @param value R
+     * @return R
+     */
     @Override
     public R put(T key, R value) {
         if(value == null)
@@ -90,6 +115,16 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
         contents.put(key, value);
         partitions.get(strategy.allocate(key, value, this)).put(key, value);
         return old;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param m Map<? extends T, ? extends R>
+     */
+    @Override
+    public void putAll(Map<? extends T, ? extends R> m) {
+        for(Map.Entry<? extends T, ? extends R> entry : m.entrySet())
+            put(entry.getKey(), entry.getValue());
     }
 
     @Override
@@ -143,6 +178,14 @@ public abstract class AbstractMapBucket<T,R> extends AbstractMap<T,R> implements
      */
     public boolean containsKey(Object o) {
         return contents.containsKey(o);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return Boolean
+     */
+    public boolean containsValue(Object value) {
+        return contents.containsValue(value);
     }
 
     /**

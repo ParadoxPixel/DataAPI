@@ -10,6 +10,14 @@ public class DataService<T, R extends IData<T>> {
     private final Map<T, R> entries = new ConcurrentHashMap<>();
 
     /**
+     * Get all entries
+     * @return Map<T, R>
+     */
+    public Map<T, R> getEntries() {
+        return entries;
+    }
+
+    /**
      * Add entry and return old
      * @param entry R
      * @return R
